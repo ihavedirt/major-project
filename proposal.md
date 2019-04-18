@@ -1,5 +1,5 @@
 # Major Project Proposal
-For my major project I would like to continue my beat making program. Essentially it weill be a basic program to make music using beats and melody from built in keyboard. I already made a program to creat bars of beats, hopfully I will be able to copy the 2D array and put those into the music sheet array. for the keyboard I heop to use keyboard inputs to add notes into another bar for melodies.
+For my major project I would like to continue my beat making program. Essentially it will be a basic program to make music using beats and melody from built in keyboard. I already made a program to create bars of beats. Hopfully I will be able to copy the 2D array and put those into the music sheet array. for the keyboard I hope to use keyboard inputs to add notes into another bar for melodies.
 
 ## Need to Have List
 - bar sheet to make basic beat
@@ -7,7 +7,7 @@ For my major project I would like to continue my beat making program. Essentiall
 - ability to play overall music sheet
 - making multiple patterns
 - making multiple melody patterns
-- add bars and melody to music sheet
+- add bars to music sheet
 
 ## Nice to Have List
 - instrument lables
