@@ -94,6 +94,7 @@ class SlidingBar {
 
   move(windWidth, windHeight){
   //visual slider when playState
+    push();
     strokeWeight(1);
     if (this.xcord < windWidth){
       this.xcord+= this.tempo;
@@ -106,6 +107,7 @@ class SlidingBar {
     if (this.xcord < 0){
       this.xcord = 0;
     }
+    pop();
   }
 
   barPlay(){
