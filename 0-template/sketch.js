@@ -8,17 +8,25 @@
 let wave;
 let playing = false;
 let slider;
+let env;
+
+let keys = ['z','x','c','v','b','n','m'];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  env = new p5.Env();
   wave = new p5.Oscillator();
+
   slider = createSlider(100, 1000, 440);
   slider.position(100, 100);
   slider.style('width', '120px');
 
+  env.setADSR(0.001, 0.5, 0, 0.01);
+  env.setRange(1, 0);
+
   wave.setType('sine');
   wave.start();
-  wave.amp(0);
+  wave.amp(env);
   wave.freq(440);
 }
 
@@ -30,13 +38,12 @@ function draw() {
 
 function mouseClicked(){
   if (mouseY > height/2){
-    if (!playing){
-      wave.amp(0.3, 0.5);
-      playing = true;
-    }
-    else{
-      wave.amp(0, 0.5);
-      playing = false;
-    }
+    env.play();
+  }
+}
+
+function keyTyped(){
+  if (keys.indexOf(key) > -1){
+    console.log(keys.indexOf(key));
   }
 }
