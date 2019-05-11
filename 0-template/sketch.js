@@ -14,20 +14,21 @@ let keys = ['z','x','c','v','b','n','m'];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  env = new p5.Env();
+  // env = new p5.Env();
   wave = new p5.Oscillator();
 
   slider = createSlider(100, 1000, 440);
   slider.position(100, 100);
   slider.style('width', '120px');
 
-  env.setADSR(0.001, 0.5, 0, 0.01);
-  env.setRange(1, 0);
+  // env.setADSR(0.001, 0.5, 0, 0.01);
+  // env.setRange(1, 0);
 
   wave.setType('sine');
-  wave.start();
-  wave.amp(env);
+  // wave.start();
+  wave.amp(0.1);
   wave.freq(440);
+  wave.connect('assets/a-key.wav')
 }
 
 function draw() {
@@ -38,7 +39,7 @@ function draw() {
 
 function mouseClicked(){
   if (mouseY > height/2){
-    env.play();
+    wave.play();
   }
 }
 
