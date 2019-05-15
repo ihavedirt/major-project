@@ -10,7 +10,13 @@ let playing = false;
 let slider;
 let env;
 
+let mySound;
+
 let keys = ['z','x','c','v','b','n','m'];
+
+function preload(){
+  mySound = loadSound('assets/a-key.wav')
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -21,25 +27,20 @@ function setup() {
   slider.position(100, 100);
   slider.style('width', '120px');
 
-  // env.setADSR(0.001, 0.5, 0, 0.01);
-  // env.setRange(1, 0);
-
   wave.setType('sine');
-  // wave.start();
-  wave.amp(0.1);
+  wave.amp(0.1, 0.05);
   wave.freq(440);
-  wave.connect('assets/a-key.wav')
+  wave.connect(mySound);
 }
 
 function draw() {
   background(220);
-  console.log(key);
-  wave.freq(slider.value())
+  mySound.freq(slider.value())
 }
 
 function mouseClicked(){
   if (mouseY > height/2){
-    wave.play();
+    mySound.play();
   }
 }
 
