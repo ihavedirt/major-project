@@ -6,7 +6,6 @@ For my major project I would like to continue my beat making program. Essentiall
 - ability to play beats
 - ability to play overall music sheet
 - making multiple patterns
-- making multiple melody patterns
 - add bars to music sheet
 
 ## Nice to Have List
@@ -15,3 +14,4 @@ For my major project I would like to continue my beat making program. Essentiall
 - visual audio graph
 - ability to save
 - piano keyboard(about 2 octaves)
+- making multiple melody patterns

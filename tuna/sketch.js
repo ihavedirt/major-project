@@ -93,7 +93,7 @@ class SlidingBar {
   }
 
   move(windWidth, windHeight){
-  //visual slider when playState
+  //visual slider when barPlayState
     push();
     strokeWeight(1);
     if (this.xcord < windWidth){
@@ -175,39 +175,40 @@ let sheet;
 let sheetCell = new Cell(20, 70, 10, 65);
 
 let pushed = 50;//cotton on side
-let underBarDowny = 60;
+let underBarCotton = 60;
 let extendedPattern = 1500;
 let bottomPushed = 70;
 let sliderCotton = 110;
 let divider = 10;
 
-let playState = false;
-let inst;//array for soundfiles
-let instLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
+let sheetPlayState = false;
+let barPlayState = false;
+let instrument;//array for soundfiles
+let instrumentLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
 let smallBar = new SlidingBar(3);//bar's bar
-let tempo = 3;
+let bigBar = new SlidingBar(5)//sheet's bar
 
-let slider = [];//array of sliders for instruments
+let slider = [];//array of sliders for Instruments
 // let lastClicked;
 
 let keyboard = new Keyboard();
 
-let barVolumeReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarDowny/2), 80, 34, function(){
+let barVolumeReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarCotton/2), 80, 34, function(){
   for (let i = 0; i < 6; i++){
     slider[i].value(0.5);
   }
 });
 
-let playButton = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarDowny/2), 40, 40, function(){
-  if (playState){
-    playState = false;
+let playBar = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarCotton/2), 40, 40, function(){
+  if (barPlayState){
+    barPlayState = false;
   }
   else{
-    playState = true;
+    barPlayState = true;
   }
 });
 
-let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBarDowny/2), 50, 30, function(){
+let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBarCotton/2), 50, 30, function(){
   for (let i = 0; i < barCell.gridY; i++){
     for (let j = 0; j < barCell.note; j++){
       for (let k = 0; k < 4; k++){
@@ -222,17 +223,24 @@ let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBar
   }
 });
 
-let tempoUp = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarDowny/2)-10, 24, 14, function(){
+let tempoUp = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarCotton/2)-10, 24, 14, function(){
   smallBar.tempo += 0.5;
 });
 
-let tempoDown = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarDowny/2)+10, 24, 14, function(){
+let tempoDown = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarCotton/2)+10, 24, 14, function(){
   if (smallBar.tempo > 0){
     smallBar.tempo -= 0.5;
   }
 });
 
-
+let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
+  if (sheetPlayState){
+    sheetPlayState = false;
+  }
+  else{
+    sheetPlayState = true;
+  }
+});
 
 
 
@@ -264,26 +272,24 @@ function setup() {
   frameRate(100);
   createCanvas(windowWidth, windowHeight);
 
-  inst = [hat.sound, clap.sound, ride.sound, snare.sound, kick.sound, g808.sound];
+  instrument = [hat.sound, clap.sound, ride.sound, snare.sound, kick.sound, g808.sound];
   bars = barCell.createGrid();
   sheet = sheetCell.createGrid();
 
   strokeWeight(0.2);
   stroke('white');
 
-  instSliders();
-
-  textSize(18);
-  text('Click in the bar to add sound to pattern        Click spacebar to set where to play        Play/pause button is box at bottom left        button below sliders resets volume', 700, 100, 350);
+  instrumentSliders();
 }
 
 function draw() {
-  stuffings();
+  stuffings();//background colours
 
   push();
+  //beat sheet
     translate(pushed, 0);
     drawBarGrid(barCell.gridY, barCell.gridX);
-    if (playState){
+    if (barPlayState){
       smallBar.barPlay();
       smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY);
     }
@@ -294,18 +300,26 @@ function draw() {
   pop();
 
 
-  instLabels();
-  instVolumeChanger();
+  instrumentLabels();
+  instrumentVolumeChanger();
 
   push();
-    translate(bottomPushed, barCell.gridY*barCell.height + underBarDowny + divider);
+  //overall music sheet
+    translate(bottomPushed, barCell.gridY*barCell.height + underBarCotton + divider);
     stroke('grey');
     drawSheetGrid(sheetCell.gridY, sheetCell.gridX);
+    if (sheetPlayState){
+      bigBar.move(sheetCell.width*sheetCell.gridX, sheetCell.height*sheetCell.gridY);
+    }
+    else{
+      bigBar.xcord = 0;
+    }
   pop();
 
   push();
-    playButton.calcMouse();
-    playButton.displayRect();
+  //various buttons
+    playBar.calcMouse();
+    playBar.displayRect();
     barVolumeReset.calcMouse();
     barVolumeReset.displayRect();
     barReset.calcMouse();
@@ -314,9 +328,12 @@ function draw() {
     tempoUp.displayRect();
     tempoDown.calcMouse();
     tempoDown.displayRect();
+    playSheet.calcMouse();
+    playSheet.displayRect();
   pop();
 
   push();
+  //keyboard stuff
   translate(pushed+barCell.gridX*barCell.width+sliderCotton + 5, 5);
   keyboard.draw();
   pop();
@@ -406,7 +423,7 @@ function mouseClicked(){
 
   if (mouseX > pushed && mouseX < barCell.width*barCell.gridX + pushed && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
     if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
-      bars[yVal][xVal] = inst[yVal];
+      bars[yVal][xVal] = instrument[yVal];
     }
     else if ((xVal % 8) < 4){
       bars[yVal][xVal] = 0;
@@ -416,9 +433,9 @@ function mouseClicked(){
     }
   }
 
-  // // returns last clicked inst
+  // // returns last clicked instrument
   // if (mouseX > pushed && mouseX < barCell.width*barCell.gridX && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
-  //   lastClicked = inst[yVal];
+  //   lastClicked = instrument[yVal];
   //   return lastClicked;
   // }
 }
@@ -434,33 +451,35 @@ function stuffings(){
   //design stuff refer to map(David has it)
 
   fill(33,33,33);//under the bars
-  rect(0, barCell.gridY*barCell.height, barCell.gridX*barCell.width + pushed, underBarDowny);
-  fill(232,221,203);//left most
+  rect(0, barCell.gridY*barCell.height, barCell.gridX*barCell.width + pushed, underBarCotton);
+  fill(232,221,203);//instrument labels
   rect(0, 0, pushed, barCell.height*barCell.gridY);
-  fill(50, 50, 50);// butt
-  rect(0, barCell.height*barCell.gridY + underBarDowny, barCell.gridX*barCell.width + pushed + extendedPattern, height - barCell.height*barCell.gridY);
-  fill(232,221,203);//left most bottom
-  rect(0, barCell.height*barCell.gridY + underBarDowny, bottomPushed, height - underBarDowny + barCell.height*barCell.gridY);
+  fill(33, 33, 33);//sheet
+  rect(0, barCell.height*barCell.gridY + underBarCotton, barCell.gridX*barCell.width + pushed + extendedPattern, height - barCell.height*barCell.gridY);
+  fill(232,221,203);//sheet labels
+  rect(0, barCell.height*barCell.gridY + underBarCotton, bottomPushed, height - underBarCotton + barCell.height*barCell.gridY);
   fill(33,33,33);//slider cotton
-  rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarDowny);
-  fill(33,33,33);// low cotton
-  rect(0, barCell.height*barCell.gridY + underBarDowny, barCell.gridX*barCell.width + pushed + extendedPattern, divider);
-  fill(232,221,203);//under keyboard
+  rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarCotton);
+  fill(33,33,33);//low cotton
+  rect(0, barCell.height*barCell.gridY + underBarCotton, barCell.gridX*barCell.width + pushed + extendedPattern, divider);
+  fill(232,221,203);//behind keyboard
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 0, 850, 210);
+  fill(33, 33, 33);//pattern controls
+  rect(pushed+barCell.gridX*barCell.width+sliderCotton, 210, 850, barCell.height*barCell.gridY + underBarCotton - 210);
 }
 
-function instLabels(){
-  //label for the instruments in the bar
+function instrumentLabels(){
+  //label for the Instruments in the bar
   textSize(13);
   textAlign(CENTER);
   fill(0);
-  for (let i = 0; i < instLabel.length; i++){
-    text(instLabel[i], pushed/2, (barCell.height/2)+barCell.height*i);
+  for (let i = 0; i < instrumentLabel.length; i++){
+    text(instrumentLabel[i], pushed/2, (barCell.height/2)+barCell.height*i);
   }
 }
 
-function instSliders(){
-  //creates individual sliders for each instrument
+function instrumentSliders(){
+  //creates individual sliders for each Instrument
   for (let i = 0; i < 6; i++){
     slider.push(i);
     slider[i] = createSlider(0, 1, 0.5, 0.01);
@@ -469,9 +488,9 @@ function instSliders(){
   }
 }
 
-function instVolumeChanger(){
+function instrumentVolumeChanger(){
   //actually changes the volume depending on value from slider
   for (let i = 0; i < 6; i++){
-    inst[i].setVolume(slider[i].value());
+    instrument[i].setVolume(slider[i].value());
   }
 }
