@@ -176,7 +176,7 @@ let sheetCell = new Cell(20, 70, 10, 65);
 
 let pushed = 50;//cotton on side
 let underBarCotton = 60;
-let extendedPattern = 1500;
+let extendedPattern = 1369;
 let bottomPushed = 70;
 let sliderCotton = 110;
 let divider = 10;
@@ -190,6 +190,9 @@ let bigBar = new SlidingBar(5)//sheet's bar
 
 let slider = [];//array of sliders for Instruments
 // let lastClicked;
+
+let barPatterns = [];//holds patterns of beats
+let barSelected = 0;//state of which pattern selected
 
 let keyboard = new Keyboard();
 
@@ -242,8 +245,13 @@ let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
   }
 });
 
+let barPatternUpdate = new Button(55,55,55, 750, 255, 90, 44, function(){
+  barPatterns.splice(barSelected, 0, bars);
+});
 
-
+let addBarPattern = new Button(55,55,55, 670, 255, 20, 20, function(){
+  barPatterns.push(bars);
+});
 
 
 
@@ -330,6 +338,10 @@ function draw() {
     tempoDown.displayRect();
     playSheet.calcMouse();
     playSheet.displayRect();
+    barPatternUpdate.calcMouse();
+    barPatternUpdate.displayRect();
+    addBarPattern.calcMouse();
+    addBarPattern.displayRect();
   pop();
 
   push();
@@ -455,17 +467,17 @@ function stuffings(){
   fill(232,221,203);//instrument labels
   rect(0, 0, pushed, barCell.height*barCell.gridY);
   fill(33, 33, 33);//sheet
-  rect(0, barCell.height*barCell.gridY + underBarCotton, barCell.gridX*barCell.width + pushed + extendedPattern, height - barCell.height*barCell.gridY);
+  rect(0, barCell.height*barCell.gridY + underBarCotton, barCell.gridX*barCell.width + pushed + extendedPattern, height - barCell.height*barCell.gridY - underBarCotton);
   fill(232,221,203);//sheet labels
   rect(0, barCell.height*barCell.gridY + underBarCotton, bottomPushed, height - underBarCotton + barCell.height*barCell.gridY);
   fill(33,33,33);//slider cotton
   rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarCotton);
-  fill(33,33,33);//low cotton
-  rect(0, barCell.height*barCell.gridY + underBarCotton, barCell.gridX*barCell.width + pushed + extendedPattern, divider);
   fill(232,221,203);//behind keyboard
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 0, 850, 210);
   fill(33, 33, 33);//pattern controls
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 210, 850, barCell.height*barCell.gridY + underBarCotton - 210);
+  fill(33,33,33);//divider
+  rect(0, barCell.height*barCell.gridY + underBarCotton, extendedPattern, divider);
 }
 
 function instrumentLabels(){
