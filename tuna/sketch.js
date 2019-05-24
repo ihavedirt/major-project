@@ -245,18 +245,63 @@ let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
   }
 });
 
-let barPatternUpdate = new Button(55,55,55, 750, 255, 90, 44, function(){
-  barPatterns.splice(barSelected, 0, bars);
+let barPatternUpdate = new Button(55,55,55, 760, 255, 120, 46, function(){
+  bars = [];
+  for(let i = 0; i < 6; i++) {
+    // barPatterns.length - 1 is the array we just made
+    // Push in a clone of each array from bars
+    bars.push(barPatterns[barSelected][i].slice());
+  }
+
 });
 
-let addBarPattern = new Button(55,55,55, 670, 255, 20, 20, function(){
-  barPatterns.push(bars);
+let addBarPattern = new Button(55,55,55, 670, 255, 30, 46, function() {
+  // Create empty array (logic by Aric Leather)
+  barPatterns.push([]);
+  for(let i = 0; i < 6; i++) {
+    // barPatterns.length - 1 is the array we just made
+    // Push in a clone of each array from bars
+    barPatterns[barPatterns.length - 1].push(bars[i].slice());
+  }
+});
+
+let barPatternUp = new Button(55,55,55, 840, 242, 30, 20, function() {
+  barSelected++; 
+});
+
+let barPatternDown = new Button(55,55,55, 840, 268, 30, 20, function() {
+  barSelected--; 
 });
 
 
 
+let sheetPatternUpdate = new Button(55,55,55, 1060, 255, 120, 46, function(){
+  bars = [];
+  for(let i = 0; i < 6; i++) {
+    // barPatterns.length - 1 is the array we just made
+    // Push in a clone of each array from bars
+    bars.push(barPatterns[barSelected][i].slice());
+  }
 
+});
 
+let addSheetPattern = new Button(55,55,55, 970, 255, 30, 46, function() {
+  // Create empty array (logic by Aric Leather)
+  barPatterns.push([]);
+  for(let i = 0; i < 6; i++) {
+    // barPatterns.length - 1 is the array we just made
+    // Push in a clone of each array from bars
+    barPatterns[barPatterns.length - 1].push(bars[i].slice());
+  }
+});
+
+let sheetPatternUp = new Button(55,55,55, 1140, 242, 30, 20, function() {
+  barSelected++; 
+});
+
+let sheetPatternDown = new Button(55,55,55, 1140, 268, 30, 20, function() {
+  barSelected--; 
+});
 
 
 
@@ -338,10 +383,8 @@ function draw() {
     tempoDown.displayRect();
     playSheet.calcMouse();
     playSheet.displayRect();
-    barPatternUpdate.calcMouse();
-    barPatternUpdate.displayRect();
-    addBarPattern.calcMouse();
-    addBarPattern.displayRect();
+    barPatternButtons();
+    sheetPatternButtons();
   pop();
 
   push();
@@ -374,7 +417,27 @@ function draw() {
 
 
 
+function barPatternButtons(){
+  barPatternUpdate.calcMouse();
+  barPatternUpdate.displayRect();
+  addBarPattern.calcMouse();
+  addBarPattern.displayRect();
+  barPatternUp.calcMouse();
+  barPatternUp.displayRect();
+  barPatternDown.calcMouse();
+  barPatternDown.displayRect();
+}
 
+function sheetPatternButtons(){
+  sheetPatternUpdate.calcMouse();
+  sheetPatternUpdate.displayRect();
+  addSheetPattern.calcMouse();
+  addSheetPattern.displayRect();
+  sheetPatternUp.calcMouse();
+  sheetPatternUp.displayRect();
+  sheetPatternDown.calcMouse();
+  sheetPatternDown.displayRect();
+}
 
 function drawBarGrid(y, x){
   //draws the grid based on array, with alternating colours
