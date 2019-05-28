@@ -186,12 +186,12 @@ let barPlayState = false;
 let instrument;//array for soundfiles
 let instrumentLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
 let smallBar = new SlidingBar(3);//bar's bar
-let bigBar = new SlidingBar(5)//sheet's bar
+let bigBar = new SlidingBar(1)//sheet's bar
 
 let slider = [];//array of sliders for Instruments
 // let lastClicked;
 
-let barPatterns = [];//holds patterns of beats
+let barPatterns = new Map();//holds patterns of beats
 let barSelected = 0;//state of which pattern selected
 
 let keyboard = new Keyboard();
@@ -245,63 +245,75 @@ let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
   }
 });
 
-let barPatternUpdate = new Button(55,55,55, 760, 255, 120, 46, function(){
-  bars = [];
-  for(let i = 0; i < 6; i++) {
-    // barPatterns.length - 1 is the array we just made
-    // Push in a clone of each array from bars
-    bars.push(barPatterns[barSelected][i].slice());
-  }
 
-});
+
+
 
 let addBarPattern = new Button(55,55,55, 670, 255, 30, 46, function() {
-  // Create empty array (logic by Aric Leather)
-  barPatterns.push([]);
-  for(let i = 0; i < 6; i++) {
-    // barPatterns.length - 1 is the array we just made
-    // Push in a clone of each array from bars
-    barPatterns[barPatterns.length - 1].push(bars[i].slice());
+  for(let i = 0; i < barCell.gridY; i++) {
+    barPatterns.set(barSelected, [i]);
+    for (let j = 0; j < barCell.gridY; j++){
+      barPatterns.set(barSelected, bars[j].slice());
+    }
   }
 });
 
 let barPatternUp = new Button(55,55,55, 840, 242, 30, 20, function() {
   barSelected++; 
+  // bars = [];
+  // for(let i = 0; i < 6; i++) {
+  //   bars.push(barPatterns[barSelected][i].slice());
+  // }
+  // for(let i = 0; i < 6; i++) {
+  //   barPatterns[barPatterns.length - 1].pop();
+  //   barPatterns[barPatterns.length - 1].push(bars[i].slice());
+  // }
 });
 
 let barPatternDown = new Button(55,55,55, 840, 268, 30, 20, function() {
   barSelected--; 
+  // bars = [];
+  // for(let i = 0; i < 6; i++) {
+  //   bars.push(barPatterns[barSelected][i].slice());
+  // }
+  // for(let i = 0; i < 6; i++) {
+  //   barPatterns[barPatterns.length - 1].pop();
+  //   barPatterns[barPatterns.length - 1].push(bars[i].slice());
+  // }
 });
 
 
 
-let sheetPatternUpdate = new Button(55,55,55, 1060, 255, 120, 46, function(){
-  bars = [];
-  for(let i = 0; i < 6; i++) {
-    // barPatterns.length - 1 is the array we just made
-    // Push in a clone of each array from bars
-    bars.push(barPatterns[barSelected][i].slice());
-  }
 
-});
 
-let addSheetPattern = new Button(55,55,55, 970, 255, 30, 46, function() {
-  // Create empty array (logic by Aric Leather)
-  barPatterns.push([]);
-  for(let i = 0; i < 6; i++) {
-    // barPatterns.length - 1 is the array we just made
-    // Push in a clone of each array from bars
-    barPatterns[barPatterns.length - 1].push(bars[i].slice());
-  }
-});
 
-let sheetPatternUp = new Button(55,55,55, 1140, 242, 30, 20, function() {
-  barSelected++; 
-});
+// let sheetPatternUpdate = new Button(55,55,55, 1060, 255, 120, 46, function(){
+//   bars = [];
+//   for(let i = 0; i < 6; i++) {
+//     // barPatterns.length - 1 is the array we just made
+//     // Push in a clone of each array from bars
+//     bars.push(barPatterns[barSelected][i].slice());
+//   }
 
-let sheetPatternDown = new Button(55,55,55, 1140, 268, 30, 20, function() {
-  barSelected--; 
-});
+// });
+
+// let addSheetPattern = new Button(55,55,55, 970, 255, 30, 46, function() {
+//   // Create empty array (logic by Aric Leather)
+//   barPatterns.push([]);
+//   for(let i = 0; i < 6; i++) {
+//     // barPatterns.length - 1 is the array we just made
+//     // Push in a clone of each array from bars
+//     barPatterns[barPatterns.length - 1].push(bars[i].slice());
+//   }
+// });
+
+// let sheetPatternUp = new Button(55,55,55, 1140, 242, 30, 20, function() {
+//   barSelected++; 
+// });
+
+// let sheetPatternDown = new Button(55,55,55, 1140, 268, 30, 20, function() {
+//   barSelected--; 
+// });
 
 
 
@@ -384,7 +396,7 @@ function draw() {
     playSheet.calcMouse();
     playSheet.displayRect();
     barPatternButtons();
-    sheetPatternButtons();
+    // sheetPatternButtons();
   pop();
 
   push();
@@ -393,6 +405,11 @@ function draw() {
   keyboard.draw();
   pop();
 
+  push();
+    fill(255);
+    textSize(22);
+    text(barSelected, 800, 265);
+  pop();
 }
 
 
@@ -418,8 +435,6 @@ function draw() {
 
 
 function barPatternButtons(){
-  barPatternUpdate.calcMouse();
-  barPatternUpdate.displayRect();
   addBarPattern.calcMouse();
   addBarPattern.displayRect();
   barPatternUp.calcMouse();
@@ -541,6 +556,8 @@ function stuffings(){
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 210, 850, barCell.height*barCell.gridY + underBarCotton - 210);
   fill(33,33,33);//divider
   rect(0, barCell.height*barCell.gridY + underBarCotton, extendedPattern, divider);
+  fill(55,55,55);
+  rect(700, 232, 80, 46);
 }
 
 function instrumentLabels(){
