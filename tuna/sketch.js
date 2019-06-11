@@ -269,12 +269,14 @@ let deleteBarPattern = new Button(55,55,55, 710, 255, 30, 46, function() {
 });
 
 let barPatternUp = new Button(55,55,55, 870, 242, 30, 20, function() {
-  if (barSelected < barPatterns.length - 1){
-    barSelected++; 
-  }
-  bars = [];
-  for(let i = 0; i < 6; i++) {
-    bars.push(barPatterns[barSelected][i].slice());
+  if (barPatterns.length != 0){
+    if (barSelected < barPatterns.length - 1){
+      barSelected++; 
+    }
+    bars = [];
+    for(let i = 0; i < 6; i++) {
+      bars.push(barPatterns[barSelected][i].slice());
+    }
   }
   // for(let i = 0; i < 6; i++) {
   //   barPatterns[barPatterns.length - 1].pop();
@@ -283,12 +285,14 @@ let barPatternUp = new Button(55,55,55, 870, 242, 30, 20, function() {
 });
 
 let barPatternDown = new Button(55,55,55, 870, 268, 30, 20, function() {
-  if (barSelected > 0){
-    barSelected--; 
-  };
-  bars = [];
-  for(let i = 0; i < 6; i++) {
-    bars.push(barPatterns[barSelected][i].slice());
+  if (barPatterns.length != 0){
+    if (barSelected > 0){
+      barSelected--; 
+    };
+    bars = [];
+    for(let i = 0; i < 6; i++) {
+      bars.push(barPatterns[barSelected][i].slice());
+    }
   }
   // for(let i = 0; i < 6; i++) {
   //   barPatterns[barPatterns.length - 1].pop();
@@ -568,7 +572,7 @@ function stuffings(){
   rect(pushed + barCell.width*barCell.gridX, 0, sliderCotton, barCell.height*barCell.gridY+underBarCotton);
   fill(232,221,203);//behind keyboard
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 0, 850, 210);
-  fill(33, 33, 33);//pattern controls
+  fill(33,33,33);//pattern controls
   rect(pushed+barCell.gridX*barCell.width+sliderCotton, 210, 850, barCell.height*barCell.gridY + underBarCotton - 210);
   fill(33,33,33);//divider
   rect(0, barCell.height*barCell.gridY + underBarCotton, extendedPattern, divider);
