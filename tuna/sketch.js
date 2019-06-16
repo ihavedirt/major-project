@@ -304,7 +304,7 @@ function preload(){
   kick.sound = loadSound('assets/kick.wav');
   g808.sound = loadSound('assets/808.wav');
 
-  
+
 }
 
 function setup() {
@@ -336,7 +336,7 @@ function draw() {
     else{
       smallBar.xcord = 0;
     }
-    highlight();
+    barHighlight();
   pop();
 
 
@@ -354,6 +354,7 @@ function draw() {
     else{
       bigBar.xcord = 0;
     }
+    sheetHightlight();
   pop();
 
   push();
@@ -459,14 +460,26 @@ function drawSheetGrid(y, x){
   }
 }
 
-function highlight(){
-  let yVal = floor(mouseY / barCell.height);
-  let xVal = floor((mouseX - pushed) / barCell.width);
+function barHighlight(){
+  let barYVal = floor(mouseY / barCell.height);
+  let barXVal = floor((mouseX - pushed) / barCell.width);
 
   if (mouseX > pushed && mouseX < barCell.width*barCell.gridX + pushed && mouseY > 0 && mouseY < barCell.height*barCell.gridY){
-    if (bars[yVal][xVal] === 0 || bars[yVal][xVal] === 1){
+    if (bars[barYVal][barXVal] === 0 || bars[barYVal][barXVal] === 1){
       fill(60,60,60);
-      rect(xVal*barCell.width, yVal*barCell.height, barCell.width, barCell.height);
+      rect(barXVal*barCell.width, barYVal*barCell.height, barCell.width, barCell.height);
+    }
+  }
+}
+
+function sheetHightlight(){
+  let sheetYVal = floor((mouseY - (barCell.gridY*barCell.height + underBarCotton + divider)) / sheetCell.height); 
+  let sheetXVal = floor((mouseX - bottomPushed) / sheetCell.width);
+
+  if (mouseX > bottomPushed && mouseX < (sheetCell.width*sheetCell.gridX + bottomPushed) && mouseY > (barCell.gridY*barCell.height + underBarCotton + divider) && mouseY < (barCell.gridY*barCell.height + underBarCotton + divider + sheetCell.height*sheetCell.gridY)){
+    if (sheet[sheetYVal][sheetXVal] === 0 || sheet[sheetYVal][sheetXVal] === 1){
+      fill(60,60,60);
+      rect(sheetXVal*sheetCell.width, sheetYVal*sheetCell.height, sheetCell.width, sheetCell.height)
     }
   }
 }
@@ -492,7 +505,7 @@ function mouseClicked(){
   let sheetYVal = floor((mouseY - (barCell.gridY*barCell.height + underBarCotton + divider)) / sheetCell.height); 
   let sheetXVal = floor((mouseX - bottomPushed) / sheetCell.width);
 
-  if (mouseX > bottomPushed && mouseX < sheetCell.width*sheetCell.gridX + bottomPushed && mouseY > 0 && mouseY < sheetCell.height*sheetCell.gridY){
+  if (mouseX > bottomPushed && mouseX < (sheetCell.width*sheetCell.gridX + bottomPushed) && mouseY > (barCell.gridY*barCell.height + underBarCotton + divider) && mouseY < (barCell.gridY*barCell.height + underBarCotton + divider + sheetCell.height*sheetCell.gridY)){
     if (sheet[sheetYVal][sheetXVal] === 0 || sheet[sheetYVal][sheetXVal] === 1){
       sheet[sheetYVal][sheetXVal] = barPatterns[barSelected];
     }
