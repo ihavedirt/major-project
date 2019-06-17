@@ -109,16 +109,6 @@ class SlidingBar {
     }
     pop();
   }
-
-  barPlay(){
-    //plays the sound file at given point of sliding bar
-    let xVal = this.xcord / barCell.width;
-    for (let i = 0; i < barCell.gridY; i++){
-      if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
-        bars[i][xVal].play(); 
-      }
-    }
-  }
 }
 
 class Keyboard{
@@ -330,7 +320,7 @@ function draw() {
     translate(pushed, 0);
     drawBarGrid(barCell.gridY, barCell.gridX);
     if (barPlayState){
-      smallBar.barPlay();
+      barPlay();
       smallBar.move(barCell.width*barCell.gridX, barCell.height*barCell.gridY);
     }
     else{
@@ -349,6 +339,7 @@ function draw() {
     stroke('grey');
     drawSheetGrid(sheetCell.gridY, sheetCell.gridX);
     if (sheetPlayState){
+      sheetPlay();
       bigBar.move(sheetCell.width*sheetCell.gridX, sheetCell.height*sheetCell.gridY);
     }
     else{
@@ -460,6 +451,28 @@ function drawSheetGrid(y, x){
   }
 }
 
+function barPlay(){
+  //plays the sound file at given point of sliding bar
+  let xVal = smallBar.xcord / barCell.width;
+  for (let i = 0; i < barCell.gridY; i++){
+    if (bars[i][xVal] !== 0 && bars[i][xVal] !== 1 && xVal % 1 === 0){
+      bars[i][xVal].play(); 
+    }
+  }
+}
+
+function sheetPlay(){
+  //plays the sound file at given point of sliding bar
+  let xVal = bigBar.xcord / sheetCell.width;
+  for (let i = 0; i < sheetCell.gridY; i++){
+    for (let i = 0; i < barCell.gridY; i++){
+      if (sheet[i][xVal] !== 0 && sheet[i][xVal] !== 1 && xVal % 1 === 0){
+        
+      }
+    }
+  }
+}
+
 function barHighlight(){
   let barYVal = floor(mouseY / barCell.height);
   let barXVal = floor((mouseX - pushed) / barCell.width);
@@ -530,7 +543,7 @@ function keyTyped(){
     smallBar.xcord = mouseX - pushed;
   }
   if (keyboardKeys.includes(key)){
-    console.log(key)
+    keyboardSounds[keyboardKeys.indexOf(key)].play();
   }
 }
 
