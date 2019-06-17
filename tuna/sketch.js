@@ -22,9 +22,9 @@ class Cell {
     this.gridX = gridX;//number of cells on X
     this.note = gridX / 4;//time signature(4 4)
   }
-
+  
   createGrid(){
-    //creates the array
+    //creates the arrays for the grid with a pattern of values
     let array = [];
     for (let i = 0; i < this.gridY; i++){
       let rows = [];
@@ -66,7 +66,7 @@ class Button {
   }
 
   calcMouse() {
-    //logic by Aric Leather
+    //logic by Aric Leather //calculates the position of the mouse based on boundary of button
     this.mouse = (Math.abs(mouseX - this.x) <= this.width / 2 && Math.abs(mouseY - this.y) <= this.height / 2);
   }
 
@@ -118,6 +118,7 @@ class Keyboard{
   }
 
   draw(){
+  // draws a piano keyboard
     fill(255);
     stroke(33,33,33);
     for (let i = 0; i < 14; i++){
@@ -188,12 +189,14 @@ let keyboardKeys = ['q','2','w','3','e','r','5','t','6','y','7','u',
 let keyboardSounds;
 
 let barVolumeReset = new Button(50,50,50, 583, barCell.gridY*barCell.height + (underBarCotton/2), 80, 34, function(){
+  //resets the value of all the sliders to 0.5(middle)
   for (let i = 0; i < 6; i++){
     slider[i].value(0.5);
   }
 });
 
 let playBar = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarCotton/2), 40, 40, function(){
+  //changes the play state
   if (barPlayState){
     barPlayState = false;
   }
@@ -203,6 +206,7 @@ let playBar = new Button(50,50,50, 30, barCell.gridY*barCell.height + (underBarC
 });
 
 let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBarCotton/2), 50, 30, function(){
+  //resets the bar grid to original
   for (let i = 0; i < barCell.gridY; i++){
     for (let j = 0; j < barCell.note; j++){
       for (let k = 0; k < 4; k++){
@@ -218,16 +222,19 @@ let barReset = new Button(50,50,50, 90, barCell.gridY*barCell.height + (underBar
 });
 
 let tempoUp = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarCotton/2)-10, 24, 14, function(){
+  //increases tempo
   smallBar.tempo += 0.5;
 });
 
 let tempoDown = new Button(55,55,55, 500, barCell.gridY*barCell.height + (underBarCotton/2)+10, 24, 14, function(){
+  //decreases the tempo
   if (smallBar.tempo > 0){
     smallBar.tempo -= 0.5;
   }
 });
 
 let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
+  //changes the play state of teh sheet
   if (sheetPlayState){
     sheetPlayState = false;
   }
@@ -240,6 +247,7 @@ let playSheet = new Button(55,55,55, 1432, 370, 70, 70, function(){
 
 
 let addBarPattern = new Button(55,55,55, 670, 255, 30, 46, function() {
+  //pushes the current bar pattern to the array of patterns
   barPatterns.push([]);
     for(let i = 0; i < 6; i++) {
     barPatterns[barPatterns.length - 1].push(bars[i].slice());
@@ -247,10 +255,12 @@ let addBarPattern = new Button(55,55,55, 670, 255, 30, 46, function() {
 });
 
 let saveBarPattern = new Button(55,55,55, 710, 255, 30, 46, function() {
+  //saves curretn bar pattern and replaces the pattern depending on the selected bar pattern
   barPatterns.splice(barSelected, 1, bars);
 });
 
 let barPatternUp = new Button(55,55,55, 870, 242, 30, 20, function() {
+  //replaces the current bar pattern with the selected one
   if (barPatterns.length != 0){
     if (barSelected < barPatterns.length - 1){
       barSelected++; 
@@ -263,6 +273,7 @@ let barPatternUp = new Button(55,55,55, 870, 242, 30, 20, function() {
 });
 
 let barPatternDown = new Button(55,55,55, 870, 268, 30, 20, function() {
+  //replaces the current bar pattern with the selected one
   if (barPatterns.length != 0){
     if (barSelected > 0){
       barSelected--; 
@@ -372,6 +383,7 @@ function draw() {
   pop();
 
   push();
+  //text for patterns label
     fill(255);
     textSize(22);
     text("Pattern " + (barSelected + 1), 790, 265);
@@ -401,6 +413,7 @@ function draw() {
 
 
 function barPatternButtons(){
+  //all the button fucntions for the bar patterns
   addBarPattern.calcMouse();
   addBarPattern.displayRect();
   barPatternUp.calcMouse();
@@ -412,7 +425,7 @@ function barPatternButtons(){
 }
 
 function drawBarGrid(y, x){
-  //draws the grid based on array, with alternating colours
+  //draws the grid based on array, with alternating values
   for (let i = 0; i < y; i++){
     for (let j = 0; j < x; j++){
       if (bars[i][j] === 0){
@@ -432,7 +445,7 @@ function drawBarGrid(y, x){
 }
 
 function drawSheetGrid(y, x){
-  //draws the grid based on array, with alternating colours
+  //draws the grid based on array, with alternating values
   for (let i = 0; i < y; i++){
     for (let j = 0; j < x; j++){
       if (sheet[i][j] === 0){
@@ -465,15 +478,16 @@ function sheetPlay(){
   //plays the sound file at given point of sliding bar
   let xVal = bigBar.xcord / sheetCell.width;
   for (let i = 0; i < sheetCell.gridY; i++){
-    for (let i = 0; i < barCell.gridY; i++){
-      if (sheet[i][xVal] !== 0 && sheet[i][xVal] !== 1 && xVal % 1 === 0){
-        
+    for (let j = 0; j < barCell.gridY; j++){
+      if (sheet[i][j][xVal] !== 0 && sheet[i][j][xVal] !== 1 && xVal % 1 === 0){
+        sheet[i][j][xVal].play();
       }
     }
   }
 }
 
 function barHighlight(){
+  //highlights the rect your mouse hovers over in the bar grid
   let barYVal = floor(mouseY / barCell.height);
   let barXVal = floor((mouseX - pushed) / barCell.width);
 
@@ -486,6 +500,7 @@ function barHighlight(){
 }
 
 function sheetHightlight(){
+    //highlights the rect your mouse hovers over in the sheet grid
   let sheetYVal = floor((mouseY - (barCell.gridY*barCell.height + underBarCotton + divider)) / sheetCell.height); 
   let sheetXVal = floor((mouseX - bottomPushed) / sheetCell.width);
 
