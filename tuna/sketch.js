@@ -327,7 +327,7 @@ function draw() {
   stuffings();//background colours
 
   push();
-  //beat sheet
+  //beat sheet with play state and translation
     translate(pushed, 0);
     drawBarGrid(barCell.gridY, barCell.gridX);
     if (barPlayState){
@@ -345,7 +345,7 @@ function draw() {
   instrumentVolumeChanger();
 
   push();
-  //overall music sheet
+  //overall music sheet with play state and translation
     translate(bottomPushed, barCell.gridY*barCell.height + underBarCotton + divider);
     stroke('grey');
     drawSheetGrid(sheetCell.gridY, sheetCell.gridX);
@@ -377,7 +377,7 @@ function draw() {
   pop();
 
   push();
-  //keyboard stuff
+  //draws keyboard
     translate(pushed+barCell.gridX*barCell.width+sliderCotton + 5, 5);
     keyboard.draw();
   pop();
@@ -493,7 +493,7 @@ function barPlay(){
 }
 
 function sheetPlay(){
-  //plays the sound file at given point of sliding bar
+  //plays the sound file at given point of sliding bar//doesnt work... but almost got it...
   let xVal = bigBar.xcord / (sheetCell.width/barCell.gridX);
   let sXVal = bigBar.xcord / sheetCell.width;
   for (let i = 0; i < sheetCell.gridY; i++){
