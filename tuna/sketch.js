@@ -43,7 +43,7 @@ class Cell {
 }
 
 class Instrument {
-  //will use this more later on
+  //will use this more later on, jsut a class for sound files
   constructor(){
     this.sound;
   }
@@ -71,7 +71,7 @@ class Button {
   }
 
   displayRect(){
-    //helped by Aric Leather
+    //helped by Aric Leather//displays the button and is the actual button pressing
     this.calcMouse();
     if(this.mouse && mouseIsPressed && !this.alreadyClicked) {
       this.clicked();
@@ -164,7 +164,7 @@ let bars;//bar grid
 let barCell = new Cell(15, 40, 6, 32);
 
 let sheet;
-let sheetCell = new Cell(20, 70, 10, 65);
+let sheetCell = new Cell(20, 70, 8, 65);
 
 let pushed = 50;//cotton on side
 let underBarCotton = 60;
@@ -178,7 +178,7 @@ let barPlayState = false;
 let instrument;//array for soundfiles
 let instrumentLabel = ['Hat', 'Clap', 'Ride', 'Snare', 'Kick', '808'];//labels on the side of bar
 let smallBar = new SlidingBar(3);//bar's bar
-let bigBar = new SlidingBar(1)//sheet's bar
+let bigBar = new SlidingBar((sheetCell.width/barCell.gridX)*0.1)//sheet's bar
 
 let slider = [];//array of sliders for Instruments
 // let lastClicked;
@@ -383,10 +383,28 @@ function draw() {
   pop();
 
   push();
-  //text for patterns label
+  //text
     fill(255);
     textSize(22);
     text("Pattern " + (barSelected + 1), 790, 265);
+
+    text("reset", 580, 275);
+
+    textSize(11);
+    text("play/ pause", 8, 260, 50, 50);
+
+    text("reset", 90, 275);
+
+    text("+", 500, 265);
+    text("-", 500, 285);
+
+    text("add", 670, 260);
+    text("save", 710, 260);
+
+    text("+", 870, 250);
+    text("-", 870, 270);
+
+    text("play/ pause", 1410, 350, 50, 50);
   pop();
 }
 
@@ -476,11 +494,14 @@ function barPlay(){
 
 function sheetPlay(){
   //plays the sound file at given point of sliding bar
-  let xVal = bigBar.xcord / sheetCell.width;
+  let xVal = bigBar.xcord / (sheetCell.width/barCell.gridX);
+  let sXVal = bigBar.xcord / sheetCell.width;
   for (let i = 0; i < sheetCell.gridY; i++){
-    for (let j = 0; j < barCell.gridY; j++){
-      if (sheet[i][j][xVal] !== 0 && sheet[i][j][xVal] !== 1 && xVal % 1 === 0){
-        sheet[i][j][xVal].play();
+    if (sheet[i][sXVal] !== 0 && sheet[i][sXVal] !== 1 && sXVal % 1 === 0){
+      for (let z = 0; z < barCell.gridY; z++){
+        if (sheet[i][sXVal][z][xVal] !== 0 && sheet[i][sXVal][z][xVal] !== 1 && xVal % 1 === 0){
+          sheet[i][sXVal][z][xVal].play();
+        }
       }
     }
   }
@@ -529,13 +550,15 @@ function mouseClicked(){
     }
   }
 
-  //change value in sheet array based on location clicked
+  //change value in sheet array based on location clicked, only if there is something in the array selected, as it will crash if it is undefined
   let sheetYVal = floor((mouseY - (barCell.gridY*barCell.height + underBarCotton + divider)) / sheetCell.height); 
   let sheetXVal = floor((mouseX - bottomPushed) / sheetCell.width);
 
   if (mouseX > bottomPushed && mouseX < (sheetCell.width*sheetCell.gridX + bottomPushed) && mouseY > (barCell.gridY*barCell.height + underBarCotton + divider) && mouseY < (barCell.gridY*barCell.height + underBarCotton + divider + sheetCell.height*sheetCell.gridY)){
     if (sheet[sheetYVal][sheetXVal] === 0 || sheet[sheetYVal][sheetXVal] === 1){
-      sheet[sheetYVal][sheetXVal] = barPatterns[barSelected];
+      if  (barPatterns[barSelected].length > 1){
+        sheet[sheetYVal][sheetXVal] = barPatterns[barSelected];
+      }
     }
     else if ((sheetXVal % 8) < 4){
       sheet[sheetYVal][sheetXVal] = 0;
